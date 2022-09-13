@@ -1,3 +1,5 @@
+using CompanyMVC.Service;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 //позволяет как получить доступ, так и настроить конфигурацию
 //ConfigurationManager configuration = builder.Configuration;
@@ -7,6 +9,10 @@ services.AddControllersWithViews().AddSessionStateTempDataProvider();
 
 WebApplication app = builder.Build();
 IWebHostEnvironment environment = builder.Environment;
+IConfiguration configuration = builder.Configuration;
+
+// связать Project с config файлом
+configuration.Bind("Project", new Config());
 
 //в процессе создания сайта, такие ошибки возникают
 if (environment.IsDevelopment())
