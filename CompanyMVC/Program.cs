@@ -45,7 +45,17 @@ services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-services.AddControllersWithViews().AddSessionStateTempDataProvider();
+//настройка политики авторизации Area admin
+services.AddAuthorization(x =>
+{
+    x.AddPolicy("AdminArea", policy => { policy.RequireRole("admin"); });
+});
+
+//добавление сервисов для контроллеров и представлений (MVC)
+services.AddControllersWithViews(x =>
+{
+    x.Conventions.Add(new AdminAreaAuthorization("Admin", "AdminArea"));
+}).AddSessionStateTempDataProvider();
 
 WebApplication app = builder.Build();
 //в процессе создания сайта, такие ошибки возникают
@@ -66,6 +76,8 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
+//route announcement for admin, {area:exists} - this segment should be exist
+app.MapControllerRoute("admin", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 //app.MapGet("/", () => "Hello World!");
 
