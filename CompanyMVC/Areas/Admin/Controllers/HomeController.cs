@@ -1,15 +1,23 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CompanyMVC.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyMVC.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "admin")]
+    [Area("Admin")]
     public class HomeController : Controller
-    {   
-        [Authorize(Roles = "admin")]
-        [Area("Admin")]
+    {      
+        private readonly DataManager dataManager;
+
+        public HomeController(DataManager dataManager)
+        {
+            this.dataManager = dataManager;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            return View(dataManager.ServiceItems.GetServiceItems());
         }
     }
 }

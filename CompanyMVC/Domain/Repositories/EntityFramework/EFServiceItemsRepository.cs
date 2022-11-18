@@ -18,7 +18,7 @@ namespace CompanyMVC.Domain.Repositories.EntityFramework
             return context.ServiceItems;
         }
         //выбираем записи по ид
-        public ServiceItem GetServiceItem(Guid id)
+        public ServiceItem GetServiceItemById(Guid id)
         {
             return context.ServiceItems.FirstOrDefault(x => x.Id == id);
         }
